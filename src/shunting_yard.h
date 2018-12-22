@@ -45,16 +45,30 @@
 #include <float.h>
 #include <string.h>
 
+
 #define MAXOPSTACK 64
 #define MAXNUMSTACK 64
 #define DOUBLE double
 #define DECIMAL_SEPARATOR '.'
 #define ERR_MSG_LEN 256
 
+/*
+ * Terminology:
+ *
+ * Unary operators expect one (1) operand.
+ * Binary operators expect two (2) operands.
+ * Ternary operators expect three (3) operands.
+ *
+ * LHS is informal shorthand for the left-hand side of an equation.
+ * Similarly, RHS is the right-hand side.
+ */
 
-/* Evaluate a math expression
+/* Evaluate a math expression without any variables
  * returns result as double if parsing and calculations do pass successfully
  * returns DBL_MIN if failure occur. err is populated too
  * Thread-safe support
  */
-DOUBLE evaluate(const char* mathExpression, char* err);
+DOUBLE evaluate(const char* expression, char* err);
+
+
+

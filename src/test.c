@@ -1,6 +1,6 @@
 #include <assert.h>
 #include "test.h"
-#include "shunting_yard.h"
+#include "var.h"
 
 void assert_double(DOUBLE n1, DOUBLE n2, unsigned int precision)
 {
@@ -12,7 +12,9 @@ void assert_double(DOUBLE n1, DOUBLE n2, unsigned int precision)
 int test_cmd(int argc, char *argv[])
 {
 	char err[ERR_MSG_LEN];
+	DOUBLE result = 0;
 
+	/****************************************************************/
 	/* Test proper expressions */
 	fprintf(stdout, "[TEST] Sample expressions ... \n");
 	assert(evaluate("12.1*3.345*1.44", err) == 58.283280);
@@ -20,6 +22,7 @@ int test_cmd(int argc, char *argv[])
 	assert(evaluate("(12358*(345+21))/12.1", err) == 373803.96694214875);
 	fprintf(stdout, "[TEST] Sample expressions completed \n");
 
+	/****************************************************************/
 	/* Test wrong or incomplete input */
 	fprintf(stdout, "[TEST] Failure expressions ... \n");
 
@@ -38,6 +41,7 @@ int test_cmd(int argc, char *argv[])
 
 	fprintf(stdout, "[TEST] Failure expressions completed \n");
 
+	/****************************************************************/
 	/* Advanced expressions */
 	fprintf(stdout, "[TEST] Advanced expressions ... \n");
 	assert(evaluate("5.5*1.44-12", err) == -4.08);
@@ -51,6 +55,25 @@ int test_cmd(int argc, char *argv[])
 	assert_double(evaluate("89.2%3", err), 2.2, 2);
 
 	fprintf(stdout, "[TEST] Advanced expressions completed \n");
+
+	/****************************************************************/
+	/* Variable expressions */
+	fprintf(stdout, "[TEST] Variable expressions ... \n");
+
+	struct var_s *begin = parse_var_list("length=12;width=88");
+	result = evaluate_with_variables("(length+width)*2", begin, err);
+	assert_double(result, 200, 1);
+	cleanup_list(begin);
+
+	begin = parse_var_list("length=12.34;width=88.78;area=33.55");
+	result = evaluate_with_variables(
+			"(12%5)^3-(length+width)*2.45-area+12%5", begin, err);
+	assert_double(result, -271.2940f, 5);
+
+	cleanup_list(begin);
+
+	fprintf(stdout, "[TEST] Variable expressions completed \n");
+
 	return EXIT_SUCCESS;
 }
 

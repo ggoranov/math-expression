@@ -59,7 +59,8 @@ struct op_s
 	char op;
 	int prec;
 	int assoc;
-	int unary;DOUBLE (*eval)(DOUBLE a1, DOUBLE a2);
+	int unary;
+	DOUBLE (*eval)(DOUBLE a1, DOUBLE a2);
 } ops[] =
 {
 { 's', 11, ASSOC_LEFT, 0, eval_sqrt },
@@ -228,7 +229,7 @@ struct eval_ctx new_ctx()
 	struct eval_ctx ctx;
 	ctx.nopstack = 0;
 	ctx.nnumstack = 0;
-	/* TODO memset(ctx.err, 0, strlen(ctx.err) * (sizeof ctx.err[0])); */
+	memset(ctx.err, 0, strlen(ctx.err) * (sizeof ctx.err[0]));
 	return ctx;
 }
 
@@ -336,3 +337,4 @@ DOUBLE evaluate(const char* expr_to_eval, char* err)
 
 	return ctx.numstack[0];
 }
+

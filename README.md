@@ -42,3 +42,15 @@ Result: 10.15
  ./calc EVAL_MODE "0.00012 - 0.0000012"
 Result: 0.0001188
 ```
+
+### How to evaluate a math expression with variables
+```
+./calc EVAL_MODE "1+2+width" "width=3"
+Result: 6.0
+
+./calc EVAL_MODE "area-1+2+width" "width=3;area=100"
+Result: 104.0000000000
+
+./calc EVAL_MODE "(12%5)^3-(length+width)*2.45-area+12%5" "length=12.34;width=88.78;area=33.55"
+Result: 0.15
+```

@@ -4,7 +4,7 @@
 #include <math.h>
 #include <float.h>
 #include <string.h>
-#include "shunting_yard.h"
+#include "var.h"
 #include "test.h"
 #define ERR_MSG_LEN 256
 
@@ -12,18 +12,21 @@ int evaluate_cmd(int argc, char *argv[])
 {
 	if (argc < 3)
 	{
-		fprintf(stderr, "Usage: %s <EVAL_MODE> <expression>\n", argv[0]);
+		fprintf(stderr, "Usage: %s <EVAL_MODE> <expression> <variables list>\n", argv[0]);
 		return EXIT_FAILURE;
 	}
 
+	struct var_s *begin = 0;
+	if (argc >= 4)
+		begin = parse_var_list(argv[3]);
+
 	char err[ERR_MSG_LEN];
-	DOUBLE result = evaluate(argv[2], err);
+	DOUBLE result = evaluate_with_variables(argv[2], begin, err);
 
 	if (result != DBL_MIN)
 		printf("Result: %.10f\n", result);
 	else
 	{
-
 		printf("Error: %s\n", err);
 		return EXIT_FAILURE;
 	}
@@ -31,7 +34,7 @@ int evaluate_cmd(int argc, char *argv[])
 	return EXIT_SUCCESS;
 }
 
-const unsigned int cmds_num = 2;
+#define CMD_COUNT 2
 struct cmd_s
 {
 	char name[32];
@@ -53,7 +56,7 @@ int main(int argc, char *argv[])
 
 	/* Map command to callback*/
 	unsigned int i = 0;
-	for (; i < cmds_num; i++)
+	for (; i < CMD_COUNT; i++)
 		if (strcmp(cmds[i].name, argv[1]) == 0)
 			return cmds[i].process(argc, argv);
 
