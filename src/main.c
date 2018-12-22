@@ -23,6 +23,8 @@ int evaluate_cmd(int argc, char *argv[])
 	char err[ERR_MSG_LEN];
 	DOUBLE result = evaluate_with_variables(argv[2], begin, err);
 
+	cleanup_list(begin);
+
 	if (result != DBL_MIN)
 		printf("Result: %.10f\n", result);
 	else

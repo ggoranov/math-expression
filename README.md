@@ -4,13 +4,12 @@ Shunting-yard algorithm for parsing mathematical expressions specified in infix 
 ## Changes from original version
 
  * Context per evaluation to provide thread-safety support
- * Context Config: scale, decimal (pending)
- * Use double instead of integer for all operations
- * Use fmod in eval_mod
+ * Support double instead of integer for all operations
  * Add TEST_MODE evaluations
- * Support math operation (sqrt, sin, cos, floor, ceil) (pending)
  * Use error handling instead of exit calls
- * variables: length, width (pending)
+ * Swap variables
+ * Support math operation (sqrt, sin, cos, floor, ceil) (pending)
+ * Context Config: scale, decimal (pending)
 
 ### How to compile
 gcc ./src/*.*  -lm -o calc

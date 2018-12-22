@@ -69,6 +69,12 @@ DOUBLE evaluate_with_variables(const char* expression, struct var_s* var_list,
 
 void cleanup_list(struct var_s* var_list)
 {
-	/* TODO */
+	struct var_s* var = var_list;
+	while(var)
+	{
+		struct var_s *tmp = var;
+		var = tmp->next;
+		free(tmp);
+	}
 }
 
