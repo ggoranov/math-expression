@@ -1,7 +1,7 @@
 # Use this script as a smoke test to compile, run and profile
 # before any commit
 
-VALGRIND="valgrind --leak-check=full -v"
+VALGRIND="valgrind --leak-check=full"
 
 # Compile
 gcc ./src/*.*  -lm -o calc

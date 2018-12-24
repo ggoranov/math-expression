@@ -229,7 +229,7 @@ struct eval_ctx new_ctx()
 	struct eval_ctx ctx;
 	ctx.nopstack = 0;
 	ctx.nnumstack = 0;
-	memset(ctx.err, 0, strlen(ctx.err) * (sizeof ctx.err[0]));
+	memset(ctx.err, 0, ERR_MSG_LEN * (sizeof ctx.err[0]));
 	return ctx;
 }
 
@@ -248,7 +248,7 @@ DOUBLE evaluate(const char* expr_to_eval, char* err)
 	 * Global/Shared variables should be only read but not rewritten.
 	 */
 	struct eval_ctx ctx = new_ctx();
-	memset(err, 0, strlen(err) * (sizeof err[0]));
+	memset(err, 0, ERR_MSG_LEN * (sizeof err[0]));
 
 	for (expr = expr_to_eval; *expr; ++expr, ++pos)
 	{

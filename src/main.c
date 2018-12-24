@@ -48,6 +48,10 @@ cmds[] =
 { "TEST_MODE", test_cmd },
 { "EVAL_MODE", evaluate_cmd }, };
 
+/*
+ *  - License
+ *
+ */
 int main(int argc, char *argv[])
 {
 	if (argc < 2)

@@ -41,6 +41,8 @@ struct var_s* parse_var_list(const char *var_list)
 		name = 0;
 	}
 
+	free(src);
+
 	return begin;
 }
 
