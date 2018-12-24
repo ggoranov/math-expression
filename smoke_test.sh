@@ -4,7 +4,7 @@
 VALGRIND="valgrind --leak-check=full"
 
 # Compile
-gcc ./src/*.*  -lm -o calc
+gcc ./src/*.*  -pthread -lm -o calc
 
 # Run example expressions
 expressions=( "12*0.0125" "12*0.0125+10^2" "(12*0.0125+10^2)%45" "0.00012 - 0.0000012" )

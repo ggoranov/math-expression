@@ -1,6 +1,78 @@
+/*
+ * MIT License
+ *
+ * Copyright (c) 2018 Georgi Goranov
+ *
+ * Permission is hereby granted, free of charge, to any person obtaining a copy
+ * of this software and associated documentation files (the "Software"), to deal
+ * in the Software without restriction, including without limitation the rights
+ * to use, copy, modify, merge, publish, distribute, sublicense, and/or sell
+ * copies of the Software, and to permit persons to whom the Software is
+ * furnished to do so, subject to the following conditions:
+ *
+ * The above copyright notice and this permission notice shall be included in all
+ * copies or substantial portions of the Software.
+ *
+ * THE SOFTWARE IS PROVIDED "AS IS", WITHOUT WARRANTY OF ANY KIND, EXPRESS OR
+ * IMPLIED, INCLUDING BUT NOT LIMITED TO THE WARRANTIES OF MERCHANTABILITY,
+ * FITNESS FOR A PARTICULAR PURPOSE AND NONINFRINGEMENT. IN NO EVENT SHALL THE
+ * AUTHORS OR COPYRIGHT HOLDERS BE LIABLE FOR ANY CLAIM, DAMAGES OR OTHER
+ * LIABILITY, WHETHER IN AN ACTION OF CONTRACT, TORT OR OTHERWISE, ARISING FROM,
+ * OUT OF OR IN CONNECTION WITH THE SOFTWARE OR THE USE OR OTHER DEALINGS IN THE
+ * SOFTWARE.
+ */
+
 #include <assert.h>
 #include "test.h"
 #include "var.h"
+
+#include <unistd.h>
+#include <pthread.h>
+
+void *evaluate_with_variables_mt(void *expr)
+{
+	sleep(1);
+
+	char err[ERR_MSG_LEN];
+	DOUBLE *result_val = malloc(sizeof(DOUBLE));
+	*result_val = evaluate_with_variables((char*) expr, 0, err);
+
+	pthread_exit((void*) result_val);
+}
+
+/* Test running expressions in multi-thread manner*/
+int test_cmd_mt()
+{
+	pthread_t thread_id_1;
+	const char *expr_1 = "5.5*1.44-12";
+	pthread_create(&thread_id_1, NULL, evaluate_with_variables_mt,
+			(void*) expr_1);
+
+	pthread_t thread_id_2;
+	const char *expr_2 = "(8%3)^10";
+	pthread_create(&thread_id_2, NULL, evaluate_with_variables_mt,
+			(void*) expr_2);
+
+	pthread_t thread_id_3;
+	const char *expr_3 = "+12*(345+67)/89.1";
+	pthread_create(&thread_id_3, NULL, evaluate_with_variables_mt,
+			(void*) expr_3);
+
+	DOUBLE *result = 0;
+	pthread_join(thread_id_1, (void*) &result);
+	assert(*result == -4.08);
+	free(result);
+
+	DOUBLE *result_2 = 0;
+	pthread_join(thread_id_2, (void*) &result_2);
+	assert(*result_2 == 1024);
+	free(result_2);
+
+	DOUBLE *result_3 = 0;
+	pthread_join(thread_id_3, (void*) &result_3);
+	assert(*result_3 == DBL_MIN);
+	free(result_3);
+}
 
 void assert_double(DOUBLE n1, DOUBLE n2, unsigned int precision)
 {
@@ -66,19 +138,18 @@ int test_cmd(int argc, char *argv[])
 	cleanup_list(begin);
 
 	begin = parse_var_list("length=12.34;width=88.78;area=33.55");
-	result = evaluate_with_variables(
-			"(12%5)^3-(length+width)*2.45-area+12%5", begin, err);
+	result = evaluate_with_variables("(12%5)^3-(length+width)*2.45-area+12%5",
+			begin, err);
 	assert_double(result, -271.2940f, 5);
 
 	cleanup_list(begin);
 
 	fprintf(stdout, "[TEST] Variable expressions completed \n");
 
+	/****************************************************************/
+	/* Multi-threading examples*/
+	test_cmd_mt();
+
 	return EXIT_SUCCESS;
 }
 
-/* Test running expressions in multi-threading manner*/
-int test_cmd_mt(int argc, char *argv[])
-{
-	/* TODO */
-}
