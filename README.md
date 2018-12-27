@@ -12,7 +12,7 @@ Shunting-yard algorithm for parsing mathematical expressions specified in infix 
  * Context Config: scale, decimal (pending)
 
 ### How to compile
-gcc ./src/*.*  -lm -o calc
+gcc ./src/*.*  -pthread -lm -o calc
 
 ### How to run all tests
 ./calc TEST_MODE
