@@ -1,7 +1,10 @@
 # Use this script as a smoke test to compile, run and profile
 # before any commit
 
-VALGRIND="valgrind --leak-check=full"
+VALGRIND=""
+if [ "$1" == "valgrind" ]; then
+    VALGRIND="valgrind --leak-check=full"
+fi
 
 # Compile
 gcc ./src/*.*  -pthread -lm -o calc

@@ -74,11 +74,9 @@ int test_cmd_mt()
 	free(result_3);
 }
 
-void assert_double(DOUBLE n1, DOUBLE n2, unsigned int precision)
+void assert_double(DOUBLE n1, DOUBLE n2)
 {
-	DOUBLE num1 = floor(pow(10, precision) * n1) / pow(10, precision);
-	DOUBLE num2 = floor(pow(10, precision) * n2) / pow(10, precision);
-	assert(num1 == num2);
+	assert( fabs(n1 - n2) <= DBL_EPSILON ) ;
 }
 
 int test_cmd(int argc, char *argv[])
@@ -122,9 +120,9 @@ int test_cmd(int argc, char *argv[])
 	assert(evaluate("(8%3)^10", err) == 1024);
 	/* first char is a sign */
 	assert(evaluate("-1.1+(8%3)^10", err) == 1022.90);
-	assert_double(evaluate("4   / 5.1", err), 0.7843137255, 8);
+	assert_double(evaluate("4   / 5.1", err), 0.7843137255);
 	/* float modulo operation */
-	assert_double(evaluate("89.2%3", err), 2.2, 2);
+	assert_double(evaluate("89.2%3", err), 2.2);
 
 	fprintf(stdout, "[TEST] Advanced expressions completed \n");
 
@@ -134,13 +132,13 @@ int test_cmd(int argc, char *argv[])
 
 	struct var_s *begin = parse_var_list("length=12;width=88");
 	result = evaluate_with_variables("(length+width)*2", begin, err);
-	assert_double(result, 200, 1);
+	assert_double(result, 200);
 	cleanup_list(begin);
 
 	begin = parse_var_list("length=12.34;width=88.78;area=33.55");
 	result = evaluate_with_variables("(12%5)^3-(length+width)*2.45-area+12%5",
 			begin, err);
-	assert_double(result, -271.2940f, 5);
+	assert_double(result, -271.2940f);
 
 	cleanup_list(begin);
 
